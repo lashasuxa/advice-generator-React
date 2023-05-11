@@ -1,16 +1,20 @@
 import { useState } from 'react';
 import { Box } from '@mui/material';
 import axios from 'axios';
+import { CSSTransition } from 'react-transition-group';
+import './App.css'; 
 
 function App() {
   const [advice, setAdvice] = useState(''); 
   const [adviceId, setAdviceId] = useState('');
+  const [showAdvice, setShowAdvice] = useState(false);
 
   const fetchData = async () => {
     try {
       const response = await axios.get('https://api.adviceslip.com/advice');
       setAdvice(response.data.slip.advice);
       setAdviceId(response.data.slip.id);
+      setShowAdvice(true);
     } catch (error) {
       console.error('Error fetching advice', error);
     }
@@ -27,6 +31,12 @@ function App() {
         backgroundColor: '#202733'
       }}
     >
+          <CSSTransition
+        in={showAdvice}
+        timeout={500}
+        classNames="fade"
+        onExited={() => setShowAdvice(false)}
+      >
       <Box
         className="card"
         sx={{
@@ -53,6 +63,7 @@ function App() {
         <img src="/pattern-divider-desktop.svg" alt="divider" />
 
       </Box>
+      </CSSTransition>
       <Box
         className="btn"
         component="button"
